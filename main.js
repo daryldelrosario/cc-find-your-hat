@@ -3,59 +3,127 @@ const prompt = require('prompt-sync')();
 // GAME PIECE VARIABLES
 const hat = '\u{26D1}\u{FE0F} '.trimStart().padEnd(3);
 const hole = '\u{26AB}'.trimStart();
-const fieldChar = '\u{26D3} '.padEnd(2);
-const pathChar = '\u{2728}';
+const grass = '\u{26D3} '.padEnd(2);
+const userPath = '\u{2728}';
 
 class gameField {
-    constructor(fieldArray) {
-        this.fieldArray = fieldArray;
+    constructor(field = [[]]) {
+        this.field = field;
+        this.locationX = 0;
+        this.locationY = 0;
+        this.field[0][0] = userPath; // reference this.field[y][x]
     }
 
     print() {
         let displayField = "";
-        this.fieldArray.forEach(row => {
+        this.field.forEach(row => {
             displayField += row.join('') + '\n';
         });
         console.log(displayField);
     }
 
     askDirection() {
-        console.log("You are here " + pathChar + ". \nWhich way would you like to move?")
-        const userInput = prompt("[U/u: UP] [L/l: LEFT] [D/d: DOWN] [R/r: RIGHT]: ").toUpperCase();
+        console.log("Which way would you like to move?")
+        const userInput = prompt("[U/u: UP] [R/r: RIGHT] [D/d: DOWN] [L/l: LEFT] [Q/q: Quit]: ").toUpperCase();
         switch(userInput) {
             case "U":
-                console.log("UP");
-                break;
-            case "L":
-                console.log("LEFT");
-                break;
-            case "D":
-                console.log("DOWN");
-                break;
+                this.locationY -= 1;
+                return "UP";
             case "R":
-                console.log("RIGHT");
-                break;
+                this.locationX += 1;
+                return "RIGHT";
+            case "D":
+                this.locationY += 1;
+                return "DOWN";
+            case "L":
+                this.locationX -= 1;
+                return "LEFT";
+            case "Q":
+                breakline();
+                borderMsg("THANK YOU FOR PLAYING - COME AGAIN");
+                breakline();
+                return "QUIT";
             default:
                 breakline();
-                borderMsg("INVALID CHOICE");
+                borderMsg("INVALID CHOICE - TRY AGAIN");
                 breakline();
+                this.print();
                 this.askDirection();
                 break;
         }
     }
 
-    runGame() {
+    isInBounds() {
+        return (
+            this.locationY >= 0 &&
+            this.locationX >= 0 &&
+            this.locationY < this.field.length &&
+            this.locationX < this.field[0].length
+        );
+    }
 
+    isHat() {
+        return this.field[this.locationY][this.locationX] === hat;
+    }
+
+    isHole() {
+        return this.field[this.locationY][this.locationX] === hole;
+    }
+
+    isQuit() {
+        return 
+    }
+
+    isUserPath() {
+        return this.field[this.locationY][this.locationX] === userPath;
+    }
+
+    runGame() {
+        let playing = true;
+        breakline();
+        borderMsg("WELCOME TO 'FIND-YOUR-HAT' - YOU'RE STARTING POINT IS HERE: " + userPath);
+
+        while(playing) {
+            breakline();
+            this.print();
+            let userInput = this.askDirection();
+            let direction = directionMsg(userInput);
+
+            if(!this.isInBounds()) {
+                breakline();
+                borderMsg("OUT OF BOUNDS - GAME OVER");
+                playing = false;
+                break;
+            } else if(this.isHat()) {
+                breakline();
+                borderMsg("YOU WIN - YOU FOUND A HAT");
+                playing = false;
+                break;
+            } else if(this.isHole()) {
+                breakline();
+                borderMsg("YOU LOSE - YOU FELL IN A HOLE");
+                playing = false;
+                break;
+            }
+
+            if(userInput === "QUIT") {
+                break;
+            }
+
+            breakline();
+            borderMsg(direction);
+            this.field[this.locationY][this.locationX] = userPath;
+        }
     }
 }
 
 // TESTING CODE
 const myField = new gameField([
-    [pathChar, fieldChar, hole, fieldChar, fieldChar, fieldChar],
-    [fieldChar, hat, fieldChar, hole, fieldChar, fieldChar],
-    [fieldChar, fieldChar, fieldChar, fieldChar, fieldChar, fieldChar],
-    [hat, fieldChar, fieldChar, hole, fieldChar, fieldChar],
-    [fieldChar, fieldChar, hole, fieldChar, hole, fieldChar]
+    [grass, grass, hole, grass, grass, grass],
+    [grass, hat, grass, hole, grass, grass],
+    [grass, grass, grass, grass, grass, grass],
+    [hat, grass, grass, hole, grass, grass],
+    [grass, grass, hole, grass, hole, grass]
 ]);
 
 // HELPER FUNCTIONS
@@ -70,5 +138,8 @@ function breakline() {
     console.log("");
 }
 
-myField.print();
-myField.askDirection();
+function directionMsg(direction) {
+    return "YOU'VE MOVED ONCE SPACE " + direction;
+}
+
+myField.runGame();
