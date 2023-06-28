@@ -14,12 +14,43 @@ class gameField {
         this.field[0][0] = userPath; // reference this.field[y][x]
     }
 
-    print() {
-        let displayField = "";
-        this.field.forEach(row => {
-            displayField += row.join('') + '\n';
-        });
-        console.log(displayField);
+    runGame() {
+        let playing = true;
+        breakline();
+        borderMsg("WELCOME TO 'FIND-YOUR-HAT' - YOU'RE STARTING POINT IS HERE: " + userPath);
+
+        while(playing) {
+
+            breakline();
+            this.print();
+            let userInput = this.askDirection();
+            let direction = directionMsg(userInput);
+
+            if(!this.isInBounds()) {
+                breakline();
+                borderMsg("OUT OF BOUNDS - GAME OVER");
+                playing = false;
+                break;
+            } else if(this.isHat()) {
+                breakline();
+                borderMsg("YOU WIN - YOU FOUND A HAT");
+                playing = false;
+                break;
+            } else if(this.isHole()) {
+                breakline();
+                borderMsg("YOU LOSE - YOU FELL IN A HOLE");
+                playing = false;
+                break;
+            }
+
+            if(this.isQuit(userInput)) {
+                break;
+            }
+
+            breakline();
+            borderMsg(direction);
+            this.field[this.locationY][this.locationX] = userPath;
+        }
     }
 
     askDirection() {
@@ -74,43 +105,50 @@ class gameField {
         return userInput === "QUIT"; 
     }
 
-    runGame() {
-        let playing = true;
-        breakline();
-        borderMsg("WELCOME TO 'FIND-YOUR-HAT' - YOU'RE STARTING POINT IS HERE: " + userPath);
+    static generateField(height, width, percentage = 0.1) {
+        const field = [];
+        const totalTiles = height * width;
+        const totalHoles = Math.floor(totalTiles * percentage);
 
-        while(playing) {
+        console.log(`Total holes: ${totalHoles}`);
+        console.log(`Height: ${height}`);
+        console.log(`Width: ${width}`);
+        console.log(`Percentage: ${percentage}`);
 
-            breakline();
-            this.print();
-            let userInput = this.askDirection();
-            let direction = directionMsg(userInput);
-
-            if(!this.isInBounds()) {
-                breakline();
-                borderMsg("OUT OF BOUNDS - GAME OVER");
-                playing = false;
-                break;
-            } else if(this.isHat()) {
-                breakline();
-                borderMsg("YOU WIN - YOU FOUND A HAT");
-                playing = false;
-                break;
-            } else if(this.isHole()) {
-                breakline();
-                borderMsg("YOU LOSE - YOU FELL IN A HOLE");
-                playing = false;
-                break;
+        for(let i = 0; i < height; i++) {
+            field.push([]);
+            for(let j = 0; j < width; j++) {
+                field[i].push(grass);
             }
-
-            if(this.isQuit(userInput)) {
-                break;
-            }
-
-            breakline();
-            borderMsg(direction);
-            this.field[this.locationY][this.locationX] = userPath;
         }
+
+        const hatX = Math.floor(Math.random() * width);
+        const hatY = Math.floor(Math.random() * height);
+
+        console.log(`hatX: ${hatX}`);
+        console.log(`hatY: ${hatY}`);
+        field[hatY][hatX] = hat;
+
+        let holesPlaced = 0;
+        while(holesPlaced < totalHoles) {
+            const holeY = Math.floor(Math.random() * width);
+            const holeX = Math.floor(Math.random() * height);
+
+            if(field[holeY][holeX] !== hat && field[holeY][holeX] !== hole) {
+                field[holeY][holeX] = hole;
+                holesPlaced++;
+            }
+        }
+        
+        return field;
+    }
+
+    print() {
+        let displayField = "";
+        this.field.forEach(row => {
+            displayField += row.join('') + '\n';
+        });
+        console.log(displayField);
     }
 }
 
@@ -139,4 +177,7 @@ function borderMsg(msg) {
     console.log(border);
 }
 
-myField.runGame();
+// myField.runGame();
+
+const fieldFive = new gameField(gameField.generateField(10, 10));
+fieldFive.runGame();
