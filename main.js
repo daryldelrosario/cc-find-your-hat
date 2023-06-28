@@ -144,14 +144,13 @@ class gameField {
     }
 }
 
-// TESTING CODE
-const myField = new gameField([
-    [grass, grass, hole, grass, grass, grass],
-    [grass, hat, grass, hole, grass, grass],
-    [grass, grass, grass, grass, grass, grass],
-    [hat, grass, grass, hole, grass, grass],
-    [grass, grass, hole, grass, hole, grass]
-]);
+// HELPER FUNCTIONS
+function borderMsg(msg) {
+    const border = "=".repeat(msg.length);
+    console.log(border);
+    console.log(msg);
+    console.log(border);
+}
 
 function breakline() {
     console.log("");
@@ -161,15 +160,6 @@ function directionMsg(direction) {
     return "YOU'VE MOVED ONCE SPACE " + direction;
 }
 
-// HELPER FUNCTIONS
-function borderMsg(msg) {
-    const border = "=".repeat(msg.length);
-    console.log(border);
-    console.log(msg);
-    console.log(border);
-}
-
-// myField.runGame();
-
-const fieldFive = new gameField(gameField.generateField(5, 5, 0.5));
-fieldFive.runGame();
+// TESTING CODE
+const myField = new gameField(gameField.generateField(10, 10, 0.2));
+myField.runGame();
