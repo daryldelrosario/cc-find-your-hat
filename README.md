@@ -14,4 +14,14 @@ Find Your Hat Challenge Project via CC for JavaScript
 ```
 git clone https://github.com/daryldelrosario/cc-find-your-hat.git
 ```
+2. Navigate to project directory
+3. Ensure Node.js is installed on your machine
+4. Install the required dependencies 
+```
+npm install
+```
+5. Run the program via node.js
+```
+node main.js
+```
 
