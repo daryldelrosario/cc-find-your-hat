@@ -123,20 +123,20 @@ const myField = new gameField([
     [grass, grass, hole, grass, hole, grass]
 ]);
 
-// HELPER FUNCTIONS
-function borderMsg(msg) {
-    const border = "=".repeat(msg.length);
-    console.log(border);
-    console.log(msg);
-    console.log(border);
-}
-
 function breakline() {
     console.log("");
 }
 
 function directionMsg(direction) {
     return "YOU'VE MOVED ONCE SPACE " + direction;
+}
+
+// HELPER FUNCTIONS
+function borderMsg(msg) {
+    const border = "=".repeat(msg.length);
+    console.log(border);
+    console.log(msg);
+    console.log(border);
 }
 
 myField.runGame();
