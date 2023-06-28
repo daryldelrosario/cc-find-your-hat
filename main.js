@@ -70,12 +70,8 @@ class gameField {
         return this.field[this.locationY][this.locationX] === hole;
     }
 
-    isQuit() {
-        return 
-    }
-
-    isUserPath() {
-        return this.field[this.locationY][this.locationX] === userPath;
+    isQuit(userInput) {
+        return userInput === "QUIT"; 
     }
 
     runGame() {
@@ -84,6 +80,7 @@ class gameField {
         borderMsg("WELCOME TO 'FIND-YOUR-HAT' - YOU'RE STARTING POINT IS HERE: " + userPath);
 
         while(playing) {
+
             breakline();
             this.print();
             let userInput = this.askDirection();
@@ -106,7 +103,7 @@ class gameField {
                 break;
             }
 
-            if(userInput === "QUIT") {
+            if(this.isQuit(userInput)) {
                 break;
             }
 
