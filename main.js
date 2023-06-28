@@ -110,11 +110,6 @@ class gameField {
         const totalTiles = height * width;
         const totalHoles = Math.floor(totalTiles * percentage);
 
-        console.log(`Total holes: ${totalHoles}`);
-        console.log(`Height: ${height}`);
-        console.log(`Width: ${width}`);
-        console.log(`Percentage: ${percentage}`);
-
         for(let i = 0; i < height; i++) {
             field.push([]);
             for(let j = 0; j < width; j++) {
@@ -124,9 +119,6 @@ class gameField {
 
         const hatX = Math.floor(Math.random() * width);
         const hatY = Math.floor(Math.random() * height);
-
-        console.log(`hatX: ${hatX}`);
-        console.log(`hatY: ${hatY}`);
         field[hatY][hatX] = hat;
 
         let holesPlaced = 0;
@@ -179,5 +171,5 @@ function borderMsg(msg) {
 
 // myField.runGame();
 
-const fieldFive = new gameField(gameField.generateField(10, 10));
+const fieldFive = new gameField(gameField.generateField(5, 5, 0.5));
 fieldFive.runGame();
