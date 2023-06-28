@@ -9,7 +9,7 @@ Find Your Hat Challenge Project via CC for JavaScript
 - game ends when either fall in hole, find the hat or step out of bounds
 - runs via node.js
 
-### Installation Instructions
+## Installation Instructions
 1. Clone the repository to your local machine
 ```
 git clone https://github.com/daryldelrosario/cc-find-your-hat.git
@@ -24,4 +24,5 @@ npm install
 ```
 node main.js
 ```
+6. Follow prompts and have fun!
 
